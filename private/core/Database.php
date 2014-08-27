@@ -1,4 +1,5 @@
 <?php
+// Database Json + schema Db validate + sanitize
 class Database {
 	public  $file = false;
 	private $db = false;
