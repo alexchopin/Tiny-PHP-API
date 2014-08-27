@@ -1,0 +1,7 @@
+User-agent: * 
+Disallow: /css
+Disallow: /js
+Disallow: /fonts
+Disallow: /img
+Disallow: /sass
+Sitemap: <lien url="http://www.alexchopin.fr/sitemap.xml">http://www.alexchopin.fr/sitemap.xml</lien>
