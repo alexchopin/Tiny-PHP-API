@@ -5,7 +5,6 @@
 // $app->post('/api/sendmail', 'api/SendMail');
 // $app->all('/api/admin/^[a-z]*$:group/^[a-z]*$:action', 'EspacePro@IsConnected', 'EspacePro@IsAdmin', 'api/AdminApi');
 // $app->get('/pro/^[a-z]*$:module/^[a-z]*$:action', 'EspacePro@IsConnected', 'ProController');
-$app = new App(((isset($_GET['url'])) ? $_GET['url'] : ''));
 $app->get('/api/users', 'User');
 $app->post('/api/users/create', 'user@create');
 $app->put('/api/users/num:id', 'user@update');

@@ -65,4 +65,5 @@ class App {
 	public function delete() { return (($_SERVER['REQUEST_METHOD'] === 'DELETE') ? $this->run(func_num_args(), func_get_args()) : false);}
 	static function send($status, $data = null) {header("HTTP/1.0 ".$status);die($data);}
 }
+$app = new App(((isset($_GET['url'])) ? $_GET['url'] : ''));
 ?>
