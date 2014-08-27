@@ -6,7 +6,7 @@
 // eq, gt, gte, lt, lte, ne, in, min, max, exact
 class User {
 	private $proto = array(
-		"id"	 => array("key"		=> "ai"),
+		"_id"	 => array("key"		=> "ai"),
 		"pseudo" => array(
 			"type" 		=> "str",
 			"default" 	=> false,

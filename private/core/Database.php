@@ -3,7 +3,7 @@
 class Database {
 	public  $file = false;
 	private $db = false;
-	private $header = '{"ids":0,"body":[]}';
+	private $header = '{"ai":0,"body":[]}';
 
 	public function __construct($base, $table) {
 		$this->file = DATABASE.$base.DS.$table.'.json';
@@ -64,10 +64,11 @@ class Database {
 			} else if (!key_exists($k, $data) && key_exists("default", $p)) {
 				$data[$k] = $p["default"]; // FIELD CREATE WITH DEFAULT VALUE
 			} else if (!key_exists($k, $data) && key_exists("key", $p) && $p["key"] == "ai") {
-				$data[$k] = 0;
-				$this->db->ids++;
+				$data[$k] = $this->db->ai;
+				$this->db->ai++;
 			}
 		}
+		ksort($data);
 		return $data;
 	}
 }
