@@ -10,13 +10,6 @@ class Database {
 		if (!file_exists(DATABASE.$base)) { mkdir(DATABASE.$base, 0700);}
 		$this->db = (file_exists($this->file)) ? json_decode(file_get_contents($this->file)) : json_decode($this->header);
 	}
-	private function gt($a, $b) { return (($a > $b) ? true : false);}
-	private function gte($a, $b) { return (($a >= $b) ? true : false);}
-	private function lt($a, $b) { return (($a < $b) ? true : false);}
-	private function lte($a, $b) { return (($a <= $b) ? true : false);}
-	private function eq($a, $b) { return (($a == $b) ? true : false);}
-	private function neq($a, $b) { return (($a != $b) ? true : false);}
-	private function in($a, $b) { return in_array($a, json_decode($b));}
 	private function search($l, $a) {
 		$res = array();
 		for ($i = 0; $i < count($l); $i++) {
@@ -24,7 +17,7 @@ class Database {
 			$vars = get_object_vars($l[$i]);
 			foreach ($a as $b) {
 				$c = explode(' ', $b);
-				$o += (key_exists($c[0], $vars) && !is_object($vars[$c[0]]) && !is_array($vars[$c[0]]) && $this->$c[1]($vars[$c[0]], $c[2])) ? 1 : 0;
+				$o += (key_exists($c[0], $vars) && !is_object($vars[$c[0]]) && !is_array($vars[$c[0]]) && Inspect::$c[1]($vars[$c[0]], (($c[1] == "in") ? json_decode($c[2]) : $c[2]))) ? 1 : 0;
 			}
 			if ($o == count($a)) {
 				array_push($res, $l[$i]);
@@ -46,9 +39,36 @@ class Database {
 		}
 		return false;
 	}
-	public function update($conditions = null) {
+	public function update($opt, $data) {
+
 	}
-	public function delete($conditions = null) {
+	public function delete($opt) {
+	}
+	public function proto($proto, $data) {
+		foreach ($proto as $k => $p) {
+			if (key_exists($k, $data)) {
+				if ((key_exists("type", $p) && Inspect::$p["type"]($data[$k])) || (!key_exists("type", $p) && Inspect::str($data[$k]))) {
+					foreach ($p as $f => $v) {
+						if (!in_array($f, array("type","key","default")) && !Inspect::$f($data[$k],$v)) {
+							return ("Bad format of argument ".$k);
+						}
+					}
+					if (key_exists("key", $p) && $p["key"] == "unique" && count(json_decode($this->find('["'.$k.' eq '.$data[$k].'"]')))) {
+						return ("Entity already exists");
+					}
+				} else {
+					return ("Bad type of argument ".$k);					
+				}
+			} else if (!key_exists($k, $data) && key_exists("default", $p) && !$p["default"]) {
+				return ("Missing argument ".$k); // FIELD NO-OPTIONAL
+			} else if (!key_exists($k, $data) && key_exists("default", $p)) {
+				$data[$k] = $p["default"]; // FIELD CREATE WITH DEFAULT VALUE
+			} else if (!key_exists($k, $data) && key_exists("key", $p) && $p["key"] == "ai") {
+				$data[$k] = 0;
+				$this->db->ids++;
+			}
+		}
+		return $data;
 	}
 }
 ?>

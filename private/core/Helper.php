@@ -46,4 +46,21 @@ class Error {
 		return false;
 	}
 }
+class Inspect {
+	static function gt($a, $b) { return (($a > $b) ? true : false);}
+	static function gte($a, $b) { return (($a >= $b) ? true : false);}
+	static function lt($a, $b) { return (($a < $b) ? true : false);}
+	static function lte($a, $b) { return (($a <= $b) ? true : false);}
+	static function eq($a, $b) { return (($a == $b) ? true : false);}
+	static function ne($a, $b) { return (($a != $b) ? true : false);}
+	static function in($a, $b) { return in_array($a, $b);}
+	static function min($a, $b) { return ((strlen($a) >= $b) ? true : false);}
+	static function max($a, $b) { return ((strlen($a) <= $b) ? true : false);}
+	static function exact($a, $b) { return ((strlen($a) == $b) ? true : false);}
+	static function num($a) { return is_numeric($a);}
+	static function email($a) { return filter_var($a, FILTER_VALIDATE_EMAIL);}
+	static function tab($a) { return is_array($a);}
+	static function str($a) { return is_string($a);}
+	static function obj($a) { return is_object($a);}
+}
 ?>
