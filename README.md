@@ -43,3 +43,15 @@ $app->all('/api/:id', function() {
 
 $app->all('/api/num:id', ...); *// call function Valide::num() in private/core/Helper.php*<br>
 $app->all('/api/^[a-z]*$:id', ...); *// call function Valide::regexp()*<br>
+
+Informations
+------------
+
+The database is in project, trying to create a tiny No-SQL solution for JSON data.
+
+You can easily develop a web application which can use the API and put it in public/ folder!
+
+Remember, Tiny-PHP-API is meant to help you create a web application easily thinking about writting any backend code.
+If you want to put your application into production, I would recommend you to use MongoDB as Database.
+
+Have fun!
