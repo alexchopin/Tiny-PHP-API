@@ -23,7 +23,7 @@ PUT : $app->put();<br>
 DELETE : $app->delete();<br>
 ALL : $app->all();<br>
 
-*Configure your routes in private/core/Routes.php*
+Configure your routes in private/core/Routes.php
 
 **Differentes ways to declare your routes :**
 
