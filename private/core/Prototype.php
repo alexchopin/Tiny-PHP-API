@@ -1,9 +1,4 @@
 <?php
-// PROTOTYPE
-// Type : str, num, email, tab, obj
-// Key 	: unique, ai
-// Default : "default value", false(obligatoire)
-// eq, gt, gte, lt, lte, ne, in, min, max, exact
 class Prototype {	
 	static $user = array(
 		"_id"	 => array("type" => "num","key"	=> "ai"),
