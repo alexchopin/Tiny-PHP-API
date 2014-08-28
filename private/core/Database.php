@@ -1,5 +1,4 @@
 <?php
-// Database Json + schema Db validate + sanitize
 class Database {
 	public  $file = false;
 	private $db = false;
@@ -10,7 +9,7 @@ class Database {
 		if (!file_exists(DATABASE.$base)) { mkdir(DATABASE.$base, 0700);}
 		$this->db = (file_exists($this->file)) ? json_decode(file_get_contents($this->file)) : json_decode($this->header);
 	}
-	private function search($l, $a) {
+	private function search($l, $a, $key_opt = null) {
 		$res = array();
 		for ($i = 0; $i < count($l); $i++) {
 			$o = 0;
@@ -20,7 +19,8 @@ class Database {
 				$o += (key_exists($c[0], $vars) && !is_object($vars[$c[0]]) && !is_array($vars[$c[0]]) && Inspect::$c[1]($vars[$c[0]], (($c[1] == "in") ? json_decode($c[2]) : $c[2]))) ? 1 : 0;
 			}
 			if ($o == count($a)) {
-				array_push($res, $l[$i]);
+				$val = ($key_opt) ? $i : $l[$i];
+				array_push($res, $val);
 			}
 		}
 		return $res;
@@ -42,7 +42,15 @@ class Database {
 	public function update($opt, $data) {
 
 	}
-	public function delete($opt) {
+	public function delete($opt = null) {
+		if ($opt) {
+			$list = $this->search($this->db->body, json_decode($opt), true);
+			foreach ($list as $i) {
+				array_splice($this->db->body, $i, 1);
+			}
+			return ((count($list)) ? file_put_contents($this->file, json_encode($this->db), LOCK_EX) : false);
+		}
+		return ((file_exists($this->file)) ? unlink($this->file) : false);
 	}
 	public function proto($proto, $data) {
 		foreach ($proto as $k => $p) {
@@ -53,7 +61,7 @@ class Database {
 							return ("Bad format of argument ".$k);
 						}
 					}
-					if (key_exists("key", $p) && $p["key"] == "unique" && count(json_decode($this->find('["'.$k.' eq '.$data[$k].'"]')))) {
+					if (key_exists("key", $p) && $p["key"] == "unique" && count($this->search($this->db->body, json_decode('["'.$k.' eq '.$data[$k].'"]')))) {
 						return ("Entity already exists");
 					}
 				} else {

@@ -32,7 +32,7 @@ class User {
 		$data = (isset($_POST)) ? $_POST : null;
 		$users = new Database('admin','users');
 		if (is_array($err = $users->proto($this->proto, $data)) && ($res = $users->create($err))) {
-			App::send(E200, $res);			
+			App::send(E200, $res);
 		}
 		App::send(E400, $err);
 	}
@@ -40,12 +40,17 @@ class User {
 		$data = (isset($_POST)) ? $_POST : null;
 		$users = new Database('admin','users');
 		if ($data && ($res = $users->update($data))) {
-			App::send(E200, $res);			
+			App::send(E200, $res);
 		}
 		App::send(E400);
 	}
 	public function delete() {
-		App::send(E200, App::$vars['id']);
+		$opt = (isset(App::$vars['params']['pseudo'])) ? '["pseudo eq '.App::$vars['params']['pseudo'].'"]' : null;
+		$users = new Database('admin','users');
+		if ($users->delete($opt)) {
+			App::send(E200);
+		}
+		App::send(E400);
 	}
 }
 ?>
