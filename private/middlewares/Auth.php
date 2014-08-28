@@ -1,9 +1,7 @@
 <?php 
 class Auth {
-	public function IsAdmin() { return Valide::isAdmin();}
-	public function IsConnected() {
-		if (session_id() == "") { session_start();}
-		return ((isset($_SESSION['user']) && !empty($_SESSION['user'])) ? true : Redirect::to('home/login'));
+	public function index() { 
+		return true; // No problem : true, Error : false or App::send(E400, "error msg");
 	}
 }
 ?>

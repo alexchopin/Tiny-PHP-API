@@ -31,20 +31,24 @@ class Database {
 	public function findFirst($opt = null) {
 		return current((($opt) ? $this->search($this->db->body, $opt) : $this->db->body));
 	}
-	public function create($data) {
-		array_push($this->db->body, $data);
-		if (file_put_contents($this->file, json_encode($this->db), LOCK_EX)) {
-			return $data;
+	public function create($data, $proto = null) {
+		$res = ($proto) ? $this->proto($proto, $data) : $data;
+		if (is_array($res)) {
+			array_push($this->db->body, $res);
+			if (file_put_contents($this->file, json_encode($this->db), LOCK_EX)) {
+				return $res;
+			}
+			return true;
 		}
-		return false;
+		return $res;
 	}
-	public function update($opt, $data, $proto) {
+	public function update($opt, $data, $proto = null) {
 		$list = $this->search($this->db->body, $opt, true);
 		foreach ($list as $i) {
 			foreach ($data as $k => $v) {
 				$this->db->body[$i]->$k = $v;
 			}
-			if (!is_array($err = $this->proto($proto, get_object_vars($this->db->body[$i]), true))) {
+			if ($proto && !is_array($err = $this->proto($proto, get_object_vars($this->db->body[$i]), true))) {
 				return $err;
 			}
 		}

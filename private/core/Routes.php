@@ -1,9 +1,9 @@
 <?php 
-$app->get('/api/users', 'User');
-$app->post('/api/users/create', 'User@create');
-$app->put('/api/users/num:id', 'User@update');
-$app->delete('/api/users', 'User@delete');
-$app->delete('/api/users/^[a-z]*$:pseudo', 'User@delete');
+$app->get('/api/users', 'user');
+$app->post('/api/users/create', 'user@create');
+$app->put('/api/users/num:id', 'user@update');
+$app->delete('/api/users', 'user@delete');
+$app->delete('/api/users/^[a-z]*$:pseudo', 'user@delete');
 $app->all('/', function() {
 	App::$vars['title'] = 'Accueil';
 });
