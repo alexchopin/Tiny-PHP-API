@@ -39,8 +39,17 @@ class Database {
 		}
 		return false;
 	}
-	public function update($opt, $data) {
-
+	public function update($opt, $data, $proto) {
+		$list = $this->search($this->db->body, json_decode($opt), true);
+		foreach ($list as $i) {
+			foreach ($data as $k => $v) {
+				$this->db->body[$i]->$k = $v;
+			}
+			if (!is_array($err = $this->proto($proto, get_object_vars($this->db->body[$i]), true))) {
+				return $err;
+			}
+		}
+		return ((count($list)) ? !(file_put_contents($this->file, json_encode($this->db), LOCK_EX)) : "Datas not found");
 	}
 	public function delete($opt = null) {
 		if ($opt) {
@@ -52,16 +61,16 @@ class Database {
 		}
 		return ((file_exists($this->file)) ? unlink($this->file) : false);
 	}
-	public function proto($proto, $data) {
+	public function proto($proto, $data, $updt = null) {
 		foreach ($proto as $k => $p) {
 			if (key_exists($k, $data)) {
-				if ((key_exists("type", $p) && Inspect::$p["type"]($data[$k])) || (!key_exists("type", $p) && Inspect::str($data[$k]))) {
+				if ((key_exists("type", $p) && (Inspect::$p["type"]($data[$k]) || (key_exists("default", $p) && $p["default"] == $data[$k]))) || (!key_exists("type", $p) && Inspect::str($data[$k]))) {
 					foreach ($p as $f => $v) {
 						if (!in_array($f, array("type","key","default")) && !Inspect::$f($data[$k],$v)) {
 							return ("Bad format of argument ".$k);
 						}
 					}
-					if (key_exists("key", $p) && $p["key"] == "unique" && count($this->search($this->db->body, json_decode('["'.$k.' eq '.$data[$k].'"]')))) {
+					if (key_exists("key", $p) && $p["key"] == "unique" && !$updt && count($this->search($this->db->body, json_decode('["'.$k.' eq '.$data[$k].'"]')))) {
 						return ("Entity already exists");
 					}
 				} else {
