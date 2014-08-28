@@ -38,9 +38,8 @@ class User {
 	}
 	public function update() {
 		$opt = (isset(App::$vars['params']['id'])) ? '["_id eq '.App::$vars['params']['id'].'"]' : null;
-		$data = (isset($_POST)) ? $_POST : null;
-		// Recuperer des datas avec http PUT ???
-		// $d = json_decode(file_get_contents("php://input"));
+		$data = array();
+		parse_str(file_get_contents("php://input"), $data);
 		$users = new Database('admin','users');
 		if ($data && !($err = $users->update($opt, $data, $this->proto))) {
 			App::send(E200);
