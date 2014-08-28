@@ -14,7 +14,7 @@ class App {
 				if ($cut === false && strcmp($route[$i], $url[$i]) != 0) { return false;}
 				if ($cut !== false) {
 					$tmp = explode(':', $route[$i]);
-					if (!Valide::type($tmp[0], $url[$i])) { return Error::debug("Bad variable format in URL");}
+					if (!Validate::type($tmp[0], $url[$i])) { return Error::debug("Bad variable format in URL");}
 					App::$vars['params'][$tmp[1]] = $url[$i];
 				}
 			}
@@ -63,7 +63,7 @@ class App {
 	public function post() { return (($_SERVER['REQUEST_METHOD'] === 'POST') ? $this->run(func_num_args(), func_get_args()) : false);}
 	public function put() { return (($_SERVER['REQUEST_METHOD'] === 'PUT') ? $this->run(func_num_args(), func_get_args()) : false);}
 	public function delete() { return (($_SERVER['REQUEST_METHOD'] === 'DELETE') ? $this->run(func_num_args(), func_get_args()) : false);}
-	static function send($status, $data = null) {header("HTTP/1.0 ".$status);die($data);}
+	static function send($status, $data = null) {header("HTTP/1.0 ".$status);die(json_encode($data));}
 }
 $app = new App(((isset($_GET['url'])) ? $_GET['url'] : ''));
 ?>

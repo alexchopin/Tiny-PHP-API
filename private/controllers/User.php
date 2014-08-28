@@ -24,8 +24,8 @@ class User {
 	));
 	public function index() {
 		$users = new Database('admin','users');
-		$list = $users->find();
-		// $list = $users->find('["name eq toto"]');
+		// $list = $users->find();
+		$list = $users->find(array("pseudo eq alex"));
 		App::send(E200, $list);
 	}
 	public function create() {

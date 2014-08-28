@@ -9,7 +9,7 @@ require_once(ROOT.DS.'private'.DS.'core'.DS.'includes.php');
 <html lang="fr">
     <head>
         <meta charset="utf-8">
-        <title><?= App::$vars['title'];?></title>
+        <title><?= (isset(App::$vars['title'])) ? App::$vars['title'] : 'Title';?></title>
         <meta name="description" content="">
     </head>
 	<body>

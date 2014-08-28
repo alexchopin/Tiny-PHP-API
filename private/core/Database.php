@@ -16,7 +16,7 @@ class Database {
 			$vars = get_object_vars($l[$i]);
 			foreach ($a as $b) {
 				$c = explode(' ', $b);
-				$o += (key_exists($c[0], $vars) && !is_object($vars[$c[0]]) && !is_array($vars[$c[0]]) && Inspect::$c[1]($vars[$c[0]], (($c[1] == "in") ? json_decode($c[2]) : $c[2]))) ? 1 : 0;
+				$o += (key_exists($c[0], $vars) && !is_object($vars[$c[0]]) && !is_array($vars[$c[0]]) && Validate::$c[1]($vars[$c[0]], (($c[1] == "in") ? json_decode($c[2]) : $c[2]))) ? 1 : 0;
 			}
 			if ($o == count($a)) {
 				$val = ($key_opt) ? $i : $l[$i];
@@ -26,21 +26,20 @@ class Database {
 		return $res;
 	}
 	public function find($opt = null) {
-		// $opt = json_decode('["name eq titi","name in [a,b,c]"]'); SELECT * + CONDITION AND
-		return json_encode((($opt) ? $this->search($this->db->body, json_decode($opt)) : $this->db->body));
+		return (($opt) ? $this->search($this->db->body, $opt) : $this->db->body);
 	}
 	public function findFirst($opt = null) {
-		return json_encode(current((($opt) ? $this->search($this->db->body, json_decode($opt)) : $this->db->body)));
+		return current((($opt) ? $this->search($this->db->body, $opt) : $this->db->body));
 	}
 	public function create($data) {
 		array_push($this->db->body, $data);
 		if (file_put_contents($this->file, json_encode($this->db), LOCK_EX)) {
-			return json_encode($data);
+			return $data;
 		}
 		return false;
 	}
 	public function update($opt, $data, $proto) {
-		$list = $this->search($this->db->body, json_decode($opt), true);
+		$list = $this->search($this->db->body, $opt, true);
 		foreach ($list as $i) {
 			foreach ($data as $k => $v) {
 				$this->db->body[$i]->$k = $v;
@@ -53,7 +52,7 @@ class Database {
 	}
 	public function delete($opt = null) {
 		if ($opt) {
-			$list = $this->search($this->db->body, json_decode($opt), true);
+			$list = $this->search($this->db->body, $opt, true);
 			foreach ($list as $i) {
 				array_splice($this->db->body, $i, 1);
 			}
@@ -64,9 +63,9 @@ class Database {
 	public function proto($proto, $data, $updt = null) {
 		foreach ($proto as $k => $p) {
 			if (key_exists($k, $data)) {
-				if ((key_exists("type", $p) && (Inspect::$p["type"]($data[$k]) || (key_exists("default", $p) && $p["default"] == $data[$k]))) || (!key_exists("type", $p) && Inspect::str($data[$k]))) {
+				if ((key_exists("type", $p) && (Validate::$p["type"]($data[$k]) || (key_exists("default", $p) && $p["default"] == $data[$k]))) || (!key_exists("type", $p) && Validate::str($data[$k]))) {
 					foreach ($p as $f => $v) {
-						if (!in_array($f, array("type","key","default")) && !Inspect::$f($data[$k],$v)) {
+						if (!in_array($f, array("type","key","default")) && !Validate::$f($data[$k],$v)) {
 							return ("Bad format of argument ".$k);
 						}
 					}
