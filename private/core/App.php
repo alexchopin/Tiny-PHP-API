@@ -49,6 +49,8 @@ class App {
 	}
 	private function run($nb_args, $args) {
 		if ($nb_args < 2) { return Error::debug("Args < 2 in app->X()"); }
+		App::$vars['data']['get'] = (isset($_GET)) ? $_GET : null; // Save GET variables
+		parse_str(file_get_contents("php://input"), App::$vars['data']['post']); // Save POST/PUT variables
 		if ($this->parseUrl($args[0], $this->url)) {
 			for ($i = 1; $i < ($nb_args - 1); $i++){
 				if (!$this->parsePath($args[$i], 'middleware'))
