@@ -69,7 +69,7 @@ class Database {
 			if (key_exists($k, $data)) {
 				if ((key_exists("type", $p) && (Validate::$p["type"]($data[$k]) || (key_exists("default", $p) && $p["default"] == $data[$k]))) || (!key_exists("type", $p) && Validate::str($data[$k]))) {
 					foreach ($p as $f => $v) {
-						if (!in_array($f, array("type","key","default")) && !Validate::$f($data[$k],$v)) {
+						if (!in_array($f, array("type","key","default")) && !Validate::$f($data[$k], (($f == "in") ? json_decode($v) : $v))) {
 							return ("Bad format of argument ".$k);
 						}
 					}
