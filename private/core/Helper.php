@@ -19,6 +19,7 @@ class Validate {
 	static function eq($a, $b) { return (($a == $b) ? true : false);}
 	static function ne($a, $b) { return (($a != $b) ? true : false);}
 	static function in($a, $b) { return in_array($a, $b);}
+	static function nin($a, $b) { return !in_array($a, $b);}
 	static function min($a, $b) { return ((strlen($a) >= $b) ? true : false);}
 	static function max($a, $b) { return ((strlen($a) <= $b) ? true : false);}
 	static function exact($a, $b) { return ((strlen($a) == $b) ? true : false);}

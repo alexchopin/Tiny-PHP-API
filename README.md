@@ -85,6 +85,7 @@ lte : <= <br>
 eq  : == <br>
 ne  : != <br>
 in  : in_array() <br>
+nin  : !in_array() <br>
 min, max, exact : strlen() <br>
 pwd : crypt() <br>
 regexp : regular expression<br>
